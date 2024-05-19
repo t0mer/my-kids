@@ -1,0 +1,11 @@
+ai_detect_url: https://api.example.com/ai/detect
+ai_teach_url: https://api.example.com/ai/teach
+chats_update_interval: 3
+contacts_update_interval: 10
+images_download_interval: 15
+kids_detection_interval: 20
+wapi_api_token: your_api_token_here
+wapi_base_url: https://api.example.com/base
+wapi_contacts_url: https://api.example.com/contacts
+wapi_qr_image_url: https://api.example.com/qr-image
+wapi_session_status_url: https://api.example.com/session-status

@@ -62,3 +62,30 @@ class SqliteConnector:
         if row:
             return Contact(*row)
         return None
+    
+
+    def get_groups(self, api_call=False):
+        self.open_connection()
+        cursor = self.conn.cursor()
+        cursor.execute('SELECT id, server, name, isUser, isGroup, isMyContact, isWAContact, isBusiness, download_media FROM contacts WHERE server = "g.us"')
+        if api_call == True:
+            rows = [dict((cursor.description[i][0], value) \
+            for i, value in enumerate(row)) for row in cursor.fetchall()]
+            cursor.close()
+            return (rows[0] if rows else None) if False else rows
+        else:
+            rows = cursor.fetchall()
+        return rows
+    
+    def get_users(self, api_call=False):
+        self.open_connection()
+        cursor = self.conn.cursor()
+        cursor.execute('SELECT id, server, name, isUser, isGroup, isMyContact, isWAContact, isBusiness, download_media FROM contacts WHERE server = "c.us"')
+        if api_call == True:
+            rows = [dict((cursor.description[i][0], value) \
+            for i, value in enumerate(row)) for row in cursor.fetchall()]
+            cursor.close()
+            return (rows[0] if rows else None) if False else rows
+        else:
+            rows = cursor.fetchall()
+        return rows

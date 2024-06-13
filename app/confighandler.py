@@ -8,13 +8,13 @@ from loguru import logger
 
 class Config:
     def __init__(self, wapi_base_url: str, wapi_contacts_url: str, wapi_qr_image_url: str, 
-                 wapi_session_status_url: str, wapi_api_token: str, ai_teach_url: str, 
+                 wapi_session: str, wapi_api_token: str, ai_teach_url: str, 
                  ai_detect_url: str, contacts_update_interval: int, chats_update_interval: int, 
                  images_download_interval: int, kids_detection_interval: int):
         self.wapi_base_url = wapi_base_url
         self.wapi_contacts_url = wapi_contacts_url
         self.wapi_qr_image_url = wapi_qr_image_url
-        self.wapi_session_status_url = wapi_session_status_url
+        self.wapi_session = wapi_session
         self.wapi_api_token = wapi_api_token
         self.ai_teach_url = ai_teach_url
         self.ai_detect_url = ai_detect_url
@@ -50,7 +50,7 @@ class ConfigHandler:
             'wapi_base_url': config.wapi_base_url,
             'wapi_contacts_url': config.wapi_contacts_url,
             'wapi_qr_image_url': config.wapi_qr_image_url,
-            'wapi_session_status_url': config.wapi_session_status_url,
+            'wapi_session': config.wapi_session,
             'wapi_api_token': config.wapi_api_token,
             'ai_teach_url': config.ai_teach_url,
             'ai_detect_url': config.ai_detect_url,

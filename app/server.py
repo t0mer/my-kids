@@ -1,10 +1,11 @@
+import httpx
 import uvicorn
 import requests
 from utils import Utils
 from loguru import logger
 from sqliteconnector import SqliteConnector
-from fastapi import FastAPI, Request, File, Form, UploadFile
-from fastapi.responses import UJSONResponse
+from fastapi import FastAPI, Request, File, Form, UploadFile,HTTPException
+from fastapi.responses import UJSONResponse, Response
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -14,8 +15,9 @@ from starlette.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
 from starlette_exporter import PrometheusMiddleware, handle_metrics
-
-
+from confighandler import Config, ConfigHandler
+REMOTE_IMAGE_URL = "https://wapi.2bsafe.info/session/qr/dev/image"
+API_KEY = "agt937r8wzsyjkyx0h289u"
 
 class Server:
     def __init__(self):
@@ -31,7 +33,8 @@ class Server:
         self.app.add_middleware(PrometheusMiddleware)
         self.app.add_route("/metrics", handle_metrics)
         self.origins = ["*"]
-
+        self.configHandler = ConfigHandler()
+        self.config = self.configHandler.load()
         self.app.add_middleware(
             CORSMiddleware,
             allow_origins=self.origins,
@@ -51,8 +54,37 @@ class Server:
     
     
     
-    
+        @self.app.get("/api/session/{session}/qr")
+        async def fetch_image():
+            headers = {
+                "accept": "image/png",
+                "x-api-key": API_KEY
+            }
+
+            async with httpx.AsyncClient() as client:
+                response = await client.get(REMOTE_IMAGE_URL, headers=headers)
+                if response.status_code != 200:
+                    raise HTTPException(status_code=response.status_code, detail="Image not found")
+                return Response(content=response.content, media_type="image/png")
         
+        
+        
+        @self.app.post("/api/sessions/set-session")
+        async def submit_session(request: Request):
+            data = await request.json()
+            w_token = data.get("w_token")
+            w_end_point = data.get("w_end_point")
+            w_session = data.get("w_session")
+
+            if not all([w_token, w_end_point, w_session]):
+                raise HTTPException(status_code=400, detail="Missing required fields")
+            self.config.wapi_api_token=w_token
+            self.config.wapi_base_url=w_end_point
+            self.config.wapi_session=w_session
+            self.configHandler.save(self.config)
+
+
+                
         
         
         

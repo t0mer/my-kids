@@ -16,8 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
 from starlette_exporter import PrometheusMiddleware, handle_metrics
 from confighandler import Config, ConfigHandler
-REMOTE_IMAGE_URL = "https://wapi.2bsafe.info/session/qr/dev/image"
-API_KEY = "agt937r8wzsyjkyx0h289u"
+
 
 class Server:
     def __init__(self):

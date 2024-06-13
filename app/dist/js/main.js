@@ -32,4 +32,33 @@ $(function(){
         showOn: "both",
         buttonText : '<i class="zmdi zmdi-chevron-down"></i>',
     });
+
+
+    $('#getqr').click(function(){
+
+        w_token=$('#w_token').val();
+        w_end_point=$('#w_end_point').val();
+        w_session=$('#w_session').val();
+        const data = {
+            w_token: w_token,
+            w_end_point: w_end_point,
+            w_session: w_session
+        };
+
+        $.ajax({
+            url: 'api/sessions/set-session',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function(response) {
+                console.log("Response:", response);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    });
+
+
+
 });
